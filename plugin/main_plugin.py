@@ -78,7 +78,7 @@ class PixelPiratesPlugin:
             self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dock_widget)
         self.dock_widget.show()
 
-        def on_run(self, query_text: str):
+    def on_run(self, query_text: str):
         """Handle a query submitted from the dock widget: plan -> engine -> map."""
         from llm.llm_client import get_plan
         from llm.validator import PlanValidationError
