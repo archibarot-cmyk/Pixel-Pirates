@@ -78,30 +78,61 @@ class PixelPiratesPlugin:
             self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dock_widget)
         self.dock_widget.show()
 
-    def on_run(self, query_text: str):
-        """Handle a query submitted from the dock widget.
+        def on_run(self, query_text: str):
+        """Handle a query submitted from the dock widget: plan -> engine -> map."""
+        from llm.llm_client import get_plan
+        from llm.validator import PlanValidationError
+        from engine.ndvi import compute_ndvi
+        from engine.change_detection import change_detection
+        from engine.area_extraction import area_extraction
+        from qgis.core import (
+            QgsRasterLayer,
+            QgsProject,
+            QgsSingleBandPseudoColorRenderer,
+        )
 
-        This is currently a PLACEHOLDER. Once the LLM and engine modules
-        are ready (tested standalone by Laptop A and Laptop B), replace
-        the body of this method with:
+        try:
+            plan = get_plan(query_text)
 
-        # TODO 1. plan = llm.llm_client.get_plan(query_text)
-        # TODO 2. plan = llm.validator.validate_plan(plan)
-        # TODO 3. route plan['operation'] to the matching engine function:
-        #         engine.ndvi.compute_ndvi(plan['year_1'])
-        #         engine.change_detection.change_detection(plan['year_1'], plan['year_2'])
-        #         engine.area_extraction.area_extraction(plan['year_1'])
-        # TODO 4. load the returned output_path as a QgsRasterLayer, style
-        #         it with a red/green ramp, and add it to
-        #         QgsProject.instance()
-        # TODO 5. call self.dock_widget.set_stats(...) with the real
-        #         numbers from stats_dict
-        # TODO 6. wrap all of the above in try/except so a bad query or a
-        #         failed API call shows a clear message instead of
-        #         crashing QGIS
-        """
-        self.dock_widget.set_status(f"Received: {query_text}")
+            if plan["operation"] == "reject":
+                self.dock_widget.set_status(f"Can't process that: {plan['reason']}")
+                return
 
+            self.dock_widget.set_status(f"Running {plan['operation']}...")
+
+            if plan["operation"] == "ndvi":
+                output_path, stats = compute_ndvi(plan["year_1"])
+            elif plan["operation"] == "change_detection":
+                output_path, stats = change_detection(plan["year_1"], plan["year_2"])
+            elif plan["operation"] == "area_extraction":
+                output_path, stats = area_extraction(plan["year_1"])
+            else:
+                self.dock_widget.set_status(f"Unknown operation: {plan['operation']}")
+                return
+
+            layer_name = f"{plan['operation']}_{plan.get('year_1')}"
+            raster_layer = QgsRasterLayer(output_path, layer_name)
+
+            if not raster_layer.isValid():
+                self.dock_widget.set_status("Error: output raster failed to load.")
+                return
+
+            renderer = QgsSingleBandPseudoColorRenderer(
+                raster_layer.dataProvider(), 1
+            )
+            raster_layer.setRenderer(renderer)
+            raster_layer.triggerRepaint()
+
+            QgsProject.instance().addMapLayer(raster_layer)
+
+            self.dock_widget.set_stats(stats)
+            self.dock_widget.set_status("Done.")
+
+        except PlanValidationError as e:
+            self.dock_widget.set_status(f"Invalid query: {e}")
+        except Exception as e:
+            self.dock_widget.set_status(f"Error: {e}")
+        
     def _on_dock_closed(self):
         """Forget the dock widget reference once the user closes it."""
         self.dock_widget = None
