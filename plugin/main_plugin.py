@@ -125,14 +125,34 @@ class PixelPiratesPlugin:
 
             QgsProject.instance().addMapLayer(raster_layer)
 
-            self.dock_widget.set_stats(stats)
+            value_label, change_label = self._format_stats(plan["operation"], stats)
+            self.dock_widget.set_stats(value_label, change_label)
             self.dock_widget.set_status("Done.")
 
         except PlanValidationError as e:
             self.dock_widget.set_status(f"Invalid query: {e}")
         except Exception as e:
             self.dock_widget.set_status(f"Error: {e}")
-        
+
+    def _format_stats(self, operation: str, stats: dict) -> tuple:
+        """Pick the two most relevant numbers out of a stats dict to display."""
+        if operation == "ndvi":
+            return (
+                f"Mean NDVI: {stats.get('mean_ndvi', '--')}",
+                f"Vegetation: {stats.get('vegetation_pixel_percent', '--')}%",
+            )
+        elif operation == "change_detection":
+            return (
+                f"Area lost: {stats.get('area_lost_sq_km', '--')} sq km",
+                f"Change: {stats.get('percent_change', '--')}%",
+            )
+        elif operation == "area_extraction":
+            return (
+                f"Vegetation area: {stats.get('total_vegetation_area_sq_km', '--')} sq km",
+                f"Of total: {stats.get('percent_of_total_area', '--')}%",
+            )
+        return ("--", "--")
+
     def _on_dock_closed(self):
         """Forget the dock widget reference once the user closes it."""
         self.dock_widget = None
