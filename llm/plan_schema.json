@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GISPlan",
+  "type": "object",
+  "properties": {
+    "operation": {
+      "type": "string",
+      "enum": ["ndvi", "change_detection", "area_extraction", "reject"]
+    },
+    "region": {
+      "type": ["string", "null"]
+    },
+    "year_1": {
+      "type": ["integer", "null"]
+    },
+    "year_2": {
+      "type": ["integer", "null"]
+    },
+    "reason": {
+      "type": ["string", "null"],
+      "description": "Only set when operation is 'reject' — a short human-readable reason."
+    }
+  },
+  "required": ["operation"],
+  "additionalProperties": false
+}
