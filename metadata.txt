@@ -1,0 +1,16 @@
+[general]
+name=Pixel Pirates NDVI Assistant
+description=Ask natural language questions about vegetation change and get NDVI, change detection, and area extraction results as QGIS map layers.
+about=Pixel Pirates NDVI Assistant lets you type a plain-English question (e.g. "Show vegetation loss in Pune between 2015 and 2020") and automatically computes NDVI, change detection, or vegetation area extraction using a small pre-processed satellite data cube. Results are displayed as styled raster layers with summary statistics directly inside QGIS.
+version=0.1
+qgisMinimumVersion=3.0
+author=Pixel Pirates
+email=[email protected]
+category=Raster
+tags=ndvi,vegetation,remote sensing,llm,ai,change detection,geospatial,natural language
+homepage=https://github.com/yourusername/pixel-pirates-knowbuild
+tracker=https://github.com/yourusername/pixel-pirates-knowbuild/issues
+repository=https://github.com/yourusername/pixel-pirates-knowbuild
+icon=resources/icon.png
+experimental=True
+deprecated=False

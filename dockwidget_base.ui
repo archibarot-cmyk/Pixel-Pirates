@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PixelPiratesDockWidgetBase</class>
+ <widget class="QDockWidget" name="PixelPiratesDockWidgetBase">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>320</width>
+    <height>420</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Pixel Pirates NDVI Assistant</string>
+  </property>
+  <widget class="QWidget" name="dockWidgetContents">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="queryPromptLabel">
+      <property name="text">
+       <string>Ask a question</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="queryLineEdit">
+      <property name="placeholderText">
+       <string>e.g. Show vegetation loss in Pune, 2015 to 2020</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="runButton">
+      <property name="text">
+       <string>Run</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="statusPromptLabel">
+      <property name="text">
+       <string>Status / Parsed plan</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTextEdit" name="statusTextEdit">
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="statsLayout">
+      <item>
+       <layout class="QVBoxLayout" name="valueStatLayout">
+        <item>
+         <widget class="QLabel" name="valueCaptionLabel">
+          <property name="text">
+           <string>Area / Value</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="valueStatLabel">
+          <property name="text">
+           <string>--</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font-size: 16pt; font-weight: bold;</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="changeStatLayout">
+        <item>
+         <widget class="QLabel" name="changeCaptionLabel">
+          <property name="text">
+           <string>% Change</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="changeStatLabel">
+          <property name="text">
+           <string>--</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font-size: 16pt; font-weight: bold;</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
